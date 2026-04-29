@@ -29,11 +29,23 @@ The CLI will be a Go binary named `dc`.
 ### Phase 4: Self-Update
 - [ ] Implement an automatic update check against GitHub releases (standard for `brotherlogic` projects).
 
-## 3. Infrastructure Prep
+## 3. Development Workflow
+- [ ] **Branching Strategy**: All features developed in branches (e.g., `feat/ssh-wrapper`).
+- [ ] **CI Pipeline (GitHub Actions)**:
+    - Trigger on push to any branch.
+    - Run `go test ./...`, `go vet`, and `staticcheck`.
+    - Cross-compile for `linux/amd64` and `darwin/arm64` to verify build integrity.
+- [ ] **Automated PRs**: Use GitHub Actions to automatically create PRs for feature branches.
+- [ ] **Releases (GoReleaser)**:
+    - Trigger on tag push (e.g., `v1.0.0`).
+    - Automatically build binaries and create GitHub Releases.
+
+## 4. Infrastructure Prep
 - [ ] Ensure the Router machine has the necessary SSH private keys to access the Host machine.
 - [ ] Ensure the Host machine's `authorized_keys` includes the Router's public key.
 
-## 4. Verification & Testing
+## 5. Verification & Testing
+- [ ] **Mocking Strategy**: Abstract SSH execution behind an interface to allow CI to verify command construction without live network access.
 - [ ] **Mock Test**: Verify the CLI correctly parses a mock `mappings.json`.
 - [ ] **Integration Test**: Verify the generated SSH command string matches the expected nested format.
 - [ ] **End-to-End**: Test connection from a remote machine through the router into a test container.

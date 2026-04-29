@@ -32,6 +32,5 @@
     ],
     	"containerEnv": {
 		"GH_GIT_PROTOCOL": "ssh"
-	},
-
+	}
 }

@@ -45,13 +45,13 @@ func main() {
 			os.Exit(1)
 		}
 
-		port, err := engine.ResolvePort(containerName)
+		workspace, err := engine.ResolveWorkspace(containerName)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error resolving container %q: %v\n", containerName, err)
 			os.Exit(1)
 		}
 
-		err = ssh.Execute(&ssh.SystemExecutor{}, cfg, port)
+		err = ssh.Execute(&ssh.SystemExecutor{}, cfg, workspace)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error executing SSH: %v\n", err)
 			os.Exit(1)

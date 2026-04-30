@@ -31,9 +31,9 @@ func TestExecute(t *testing.T) {
 		RouterAddress: "router.example.com",
 		HostAddress:   "host.example.com",
 	}
-	port := 1234
+	workspace := "test-workspace"
 
-	err := Execute(mock, cfg, port)
+	err := Execute(mock, cfg, workspace)
 	if err != nil {
 		t.Fatalf("Execute failed: %v", err)
 	}
@@ -65,8 +65,8 @@ func TestExecute(t *testing.T) {
 	}
 
 	// Check inner command in Argv[3]
-	expectedInnerPart := "@host.example.com -p 1234"
+	expectedInnerPart := "@host.example.com 'ssh -t test-workspace'"
 	if !strings.Contains(mock.Argv[3], expectedInnerPart) {
-		t.Errorf("Could not find host and port in inner command: %q", mock.Argv[3])
+		t.Errorf("Could not find host and workspace in inner command: %q", mock.Argv[3])
 	}
 }

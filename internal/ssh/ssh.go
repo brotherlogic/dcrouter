@@ -30,7 +30,7 @@ func (s *SystemExecutor) LookPath(file string) (string, error) {
 }
 
 // Execute replaces the current process with a nested SSH command
-func Execute(e Executor, cfg *config.Config, port int) error {
+func Execute(e Executor, cfg *config.Config, workspace string) error {
 	currentUser, err := user.Current()
 	if err != nil {
 		return fmt.Errorf("failed to get current user: %w", err)
@@ -43,10 +43,10 @@ func Execute(e Executor, cfg *config.Config, port int) error {
 	}
 
 	// Construct the inner SSH command
-	innerCmd := fmt.Sprintf("ssh -t %s@%s -p %d", username, cfg.HostAddress, port)
+	innerCmd := fmt.Sprintf("ssh -t %s@%s 'ssh -t %s'", username, cfg.HostAddress, workspace)
 
 	// Arguments for the outer SSH command
-	// ssh -t <user>@<router> "ssh -t <user>@<host> -p <port>"
+	// ssh -t <user>@<router> "ssh -t <user>@<host> 'ssh -t <workspace>'"
 	args := []string{
 		"ssh",
 		"-t",

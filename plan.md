@@ -5,10 +5,8 @@ This document outlines the tasks required to implement the `dcr` CLI and the nec
 ## 1. `devcontainer-manager` Requirements
 The following changes are needed in the [brotherlogic/devcontainer-manager](https://github.com/brotherlogic/devcontainer-manager) project to support discovery.
 
-- [ ] **Port Allocation Strategy**: Define a unique SSH port for each managed devcontainer (e.g., starting from 2222).
-- [ ] **Port Advertising**: Update the manager to generate/update a `mappings.json` file in the repository.
-    - Format: `{"containers": {"music": {"port": 2222}, "api": {"port": 2223}}}`
-- [ ] **Container Configuration**: Ensure each devcontainer is started with the correct port mapping (e.g., `-p <host_port>:22`) and has an SSH server running.
+- [ ] **Workspace Tracking**: Ensure DevPod workspaces are named consistently with the project name.
+- [ ] **Host Configuration**: Ensure DevPod is installed and configured on the host machine to allow `ssh <project>.devpod` connections.
 
 ## 2. `dcrouter` CLI Implementation (Go)
 The CLI will be a Go binary named `dcr`.
@@ -17,13 +15,11 @@ The CLI will be a Go binary named `dcr`.
 - [x] Initialize Go module.
 - [x] Implement configuration handling (store `router_address` and `host_address` in `~/.config/dcrouter/config.json`).
 
-### Phase 2: Discovery Engine
-- [x] Implement GitHub Fetcher: Pull `mappings.json` from the `devcontainer-manager` repo.
-- [x] Implement Caching: Store the mappings locally with a TTL (e.g., 5-10 minutes) to avoid rate limits.
-- [x] Implement Name Resolution: Match the user input (e.g., `dcr music`) against the mapping.
+### Phase 2: Name Resolution
+- [x] Implement Convention-based Resolution: Resolve `<name>` to `<name>.devpod`.
 
 ### Phase 3: SSH Wrapper
-- [x] Construct the nested SSH command: `ssh -t <user>@<router> "ssh -t <user>@<host> -p <port>"`
+- [x] Construct the nested SSH command: `ssh -t <user>@<router> "ssh -t <user>@<host> 'ssh -t <workspace>'"`
 - [x] Use `syscall.Exec` to replace the Go process with the SSH process. This ensures terminal signals (resize, Ctrl+C) are handled correctly by the system SSH client.
 
 ### Phase 4: Self-Update
@@ -46,6 +42,6 @@ The CLI will be a Go binary named `dcr`.
 
 ## 5. Verification & Testing
 - [x] **Mocking Strategy**: Abstract SSH execution behind an interface to allow CI to verify command construction without live network access.
-- [x] **Mock Test**: Verify the CLI correctly parses a mock `mappings.json`.
+- [x] **Convention Test**: Verify the CLI correctly resolves the workspace name based on the naming convention.
 - [x] **Integration Test**: Verify the generated SSH command string matches the expected nested format.
 - [x] **End-to-End**: Test connection from a remote machine through the router into a test container.

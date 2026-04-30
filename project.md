@@ -9,7 +9,7 @@ The core idea around this project is that:
 
 So the essence of the project is that I am able to say on any machine that has an internet connection:
 
-dc music
+dcr music
 
 And it ssh's into my router machine directly, and then bounces into the devcontainer running on a different machine.
 

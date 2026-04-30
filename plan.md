@@ -1,6 +1,6 @@
 # Dev Container Router (dcrouter) Project Plan
 
-This document outlines the tasks required to implement the `dc` CLI and the necessary changes to the `devcontainer-manager` ecosystem.
+This document outlines the tasks required to implement the `dcr` CLI and the necessary changes to the `devcontainer-manager` ecosystem.
 
 ## 1. `devcontainer-manager` Requirements
 The following changes are needed in the [brotherlogic/devcontainer-manager](https://github.com/brotherlogic/devcontainer-manager) project to support discovery.
@@ -11,7 +11,7 @@ The following changes are needed in the [brotherlogic/devcontainer-manager](http
 - [ ] **Container Configuration**: Ensure each devcontainer is started with the correct port mapping (e.g., `-p <host_port>:22`) and has an SSH server running.
 
 ## 2. `dcrouter` CLI Implementation (Go)
-The CLI will be a Go binary named `dc`.
+The CLI will be a Go binary named `dcr`.
 
 ### Phase 1: Research & Setup
 - [x] Initialize Go module.
@@ -20,7 +20,7 @@ The CLI will be a Go binary named `dc`.
 ### Phase 2: Discovery Engine
 - [x] Implement GitHub Fetcher: Pull `mappings.json` from the `devcontainer-manager` repo.
 - [x] Implement Caching: Store the mappings locally with a TTL (e.g., 5-10 minutes) to avoid rate limits.
-- [x] Implement Name Resolution: Match the user input (e.g., `dc music`) against the mapping.
+- [x] Implement Name Resolution: Match the user input (e.g., `dcr music`) against the mapping.
 
 ### Phase 3: SSH Wrapper
 - [x] Construct the nested SSH command: `ssh -t <user>@<router> "ssh -t <user>@<host> -p <port>"`

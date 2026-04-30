@@ -27,7 +27,7 @@ func main() {
 	case "config":
 		handleConfig()
 	case "version":
-		fmt.Printf("dc version %s\n", version)
+		fmt.Printf("dcr version %s\n", version)
 	case "update":
 		update.CheckForUpdate(version, true)
 	case "help":
@@ -41,7 +41,7 @@ func main() {
 		}
 
 		if cfg.RouterAddress == "" || cfg.HostAddress == "" {
-			fmt.Fprintf(os.Stderr, "Configuration is incomplete. Please run 'dc config' first.\n")
+			fmt.Fprintf(os.Stderr, "Configuration is incomplete. Please run 'dcr config' first.\n")
 			os.Exit(1)
 		}
 
@@ -61,10 +61,10 @@ func main() {
 
 func printUsage() {
 	fmt.Println("Usage:")
-	fmt.Println("  dc config [--router <address>] [--host <address>]  - View or update configuration")
-	fmt.Println("  dc version                                         - Show version information")
-	fmt.Println("  dc update                                          - Check for updates")
-	fmt.Println("  dc <container_name>                                - Connect to a devcontainer")
+	fmt.Println("  dcr config [--router <address>] [--host <address>]  - View or update configuration")
+	fmt.Println("  dcr version                                         - Show version information")
+	fmt.Println("  dcr update                                          - Check for updates")
+	fmt.Println("  dcr <container_name>                                - Connect to a devcontainer")
 }
 
 func handleConfig() {

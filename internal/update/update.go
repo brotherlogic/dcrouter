@@ -109,8 +109,8 @@ func CheckForUpdate(currentVersion string, force bool) {
 	}
 
 	if latest != currentVersion {
-		fmt.Printf("A new version of dc is available: %s (current: %s)\n", latest, currentVersion)
-		fmt.Printf("Run 'go install github.com/brotherlogic/dcrouter/cmd/dc@latest' to update.\n")
+		fmt.Printf("A new version of dcr is available: %s (current: %s)\n", latest, currentVersion)
+		fmt.Printf("Run 'go install github.com/brotherlogic/dcrouter/cmd/dcr@latest' to update.\n")
 	} else if force {
 		fmt.Printf("You are on the latest version (%s).\n", currentVersion)
 	}

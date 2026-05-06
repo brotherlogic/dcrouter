@@ -14,5 +14,16 @@ tic -x ghostty.terminfo
 # Install tmux and emacs
 sudo apt-get update && sudo apt-get install -y tmux emacs
 
+# Auto-start tmux on SSH sessions
+if ! grep -q "Auto-start tmux on SSH sessions" ~/.zshrc; then
+cat << 'EOF' >> ~/.zshrc
+
+# Auto-start tmux on SSH sessions
+if [[ -n "$SSH_CONNECTION" && -z "$TMUX" ]]; then
+    exec tmux new-session -A -s default
+fi
+EOF
+fi
+
 git config --global user.email 'brotherlogic-automation@gmail.com'
 git config --global user.name 'Brotherlogic Automation'

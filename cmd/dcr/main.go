@@ -33,7 +33,16 @@ func main() {
 	case "help":
 		printUsage()
 	default:
+		if len(os.Args) > 3 {
+			printUsage()
+			os.Exit(1)
+		}
 		containerName := os.Args[1]
+		var issueNum string
+		if len(os.Args) == 3 {
+			issueNum = os.Args[2]
+		}
+
 		cfg, err := config.ReadConfig()
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error reading config: %v\n", err)
@@ -45,7 +54,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		workspace, err := engine.ResolveWorkspace(containerName)
+		workspace, err := engine.ResolveWorkspace(containerName, issueNum)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error resolving container %q: %v\n", containerName, err)
 			os.Exit(1)
@@ -64,7 +73,7 @@ func printUsage() {
 	fmt.Println("  dcr config [--router <address>] [--host <address>]  - View or update configuration")
 	fmt.Println("  dcr version                                         - Show version information")
 	fmt.Println("  dcr update                                          - Check for updates")
-	fmt.Println("  dcr <container_name>                                - Connect to a devcontainer")
+	fmt.Println("  dcr <container_name> [<issue_number>]               - Connect to a devcontainer")
 }
 
 func handleConfig() {

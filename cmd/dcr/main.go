@@ -34,6 +34,10 @@ func main() {
 		printUsage()
 	default:
 		containerName := os.Args[1]
+		if len(os.Args) > 2 {
+			containerName = fmt.Sprintf("%s-%s", os.Args[1], os.Args[2])
+		}
+
 		cfg, err := config.ReadConfig()
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error reading config: %v\n", err)
@@ -65,6 +69,7 @@ func printUsage() {
 	fmt.Println("  dcr version                                         - Show version information")
 	fmt.Println("  dcr update                                          - Check for updates")
 	fmt.Println("  dcr <container_name>                                - Connect to a devcontainer")
+	fmt.Println("  dcr <project> <issue_number>                        - Connect to an issue container")
 }
 
 func handleConfig() {

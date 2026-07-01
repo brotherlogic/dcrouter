@@ -20,7 +20,7 @@ cat << 'EOF' >> ~/.zshrc
 
 # Auto-start tmux
 if [[ -z "$TMUX" ]]; then
-    exec tmux new-session -A -s default
+    exec tmux new-session -A -s dcrouter
 fi
 EOF
 fi

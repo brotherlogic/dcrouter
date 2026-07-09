@@ -51,5 +51,6 @@
 		"LANG": "en_US.UTF-8",
 		"LC_ALL": "en_US.UTF-8",
 		"TZ": "America/Los_Angeles"
-	}
+	},
+    "workspaceFolder": "/workspaces/dcrouter"
 }

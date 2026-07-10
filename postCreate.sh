@@ -30,3 +30,5 @@ git config --global user.name 'Brotherlogic Automation'
 
 # Install Antigravity CLI
 curl -fsSL https://antigravity.google/cli/install.sh | bash
+
+/workspaces/dcrouter/start-tmux.sh

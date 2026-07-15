@@ -26,6 +26,8 @@ func main() {
 	switch os.Args[1] {
 	case "config":
 		handleConfig()
+	case "list":
+		handleList()
 	case "version":
 		fmt.Printf("dcr version %s\n", version)
 	case "update":
@@ -68,6 +70,7 @@ func printUsage() {
 	fmt.Println("  dcr config [--router <address>] [--host <address>]  - View or update configuration")
 	fmt.Println("  dcr version                                         - Show version information")
 	fmt.Println("  dcr update                                          - Check for updates")
+	fmt.Println("  dcr list                                            - List all available devcontainers on the host")
 	fmt.Println("  dcr <container_name>                                - Connect to a devcontainer")
 	fmt.Println("  dcr <project> <issue_number>                        - Connect to an issue container")
 }

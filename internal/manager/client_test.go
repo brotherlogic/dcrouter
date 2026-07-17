@@ -18,7 +18,8 @@ func TestFetchContainers_SSHFailure(t *testing.T) {
 		t.Fatalf("expected error, got nil")
 	}
 
-	if !strings.Contains(err.Error(), "SSH tunnel failed") && !strings.Contains(err.Error(), "connection refused") && !strings.Contains(err.Error(), "dial tcp") && !strings.Contains(err.Error(), "timeout") {
-		t.Errorf("error was not actionable, got: %v", err)
+	// The error should now include stderr from the SSH command which fails to resolve the hostname
+	if !strings.Contains(err.Error(), "SSH process exited unexpectedly") && !strings.Contains(err.Error(), "stderr:") {
+		t.Errorf("error was not actionable, expected SSH failure details, got: %v", err)
 	}
 }

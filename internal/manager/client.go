@@ -1,11 +1,13 @@
 package manager
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"net"
 	"os/exec"
 	"os/user"
+	"strings"
 	"time"
 
 	"github.com/brotherlogic/dcrouter/internal/config"
@@ -34,7 +36,9 @@ func FetchContainers(cfg *config.Config) ([]*pb.DevcontainerConfig, error) {
 	jumpArg := fmt.Sprintf("%s@%s", usr.Username, cfg.RouterAddress)
 	hostArg := fmt.Sprintf("%s@%s", usr.Username, cfg.HostAddress)
 
+	var stderr bytes.Buffer
 	cmd := exec.Command("ssh", "-N", "-L", tunnelArg, "-J", jumpArg, hostArg)
+	cmd.Stderr = &stderr
 	if err := cmd.Start(); err != nil {
 		return nil, fmt.Errorf("SSH tunnel failed to start: %w", err)
 	}
@@ -44,10 +48,28 @@ func FetchContainers(cfg *config.Config) ([]*pb.DevcontainerConfig, error) {
 		}
 	}()
 
+	errCh := make(chan error, 1)
+	go func() {
+		errCh <- cmd.Wait()
+	}()
+
 	// Wait for the local port to become dialable (max 5 seconds)
 	target := fmt.Sprintf("localhost:%d", localPort)
 	dialed := false
 	for i := 0; i < 50; i++ {
+		select {
+		case err := <-errCh:
+			errMsg := "SSH process exited unexpectedly"
+			if err != nil {
+				errMsg += fmt.Sprintf(" (%v)", err)
+			}
+			if stderr.Len() > 0 {
+				errMsg += fmt.Sprintf(": %s", strings.TrimSpace(stderr.String()))
+			}
+			return nil, fmt.Errorf("%s", errMsg)
+		default:
+		}
+
 		conn, err := net.DialTimeout("tcp", target, 100*time.Millisecond)
 		if err == nil {
 			conn.Close()
@@ -58,7 +80,11 @@ func FetchContainers(cfg *config.Config) ([]*pb.DevcontainerConfig, error) {
 	}
 
 	if !dialed {
-		return nil, fmt.Errorf("SSH tunnel failed: timeout waiting for local port %d to be dialable", localPort)
+		errMsg := fmt.Sprintf("SSH tunnel failed: timeout waiting for local port %d to be dialable", localPort)
+		if stderr.Len() > 0 {
+			errMsg += fmt.Sprintf(", stderr: %s", strings.TrimSpace(stderr.String()))
+		}
+		return nil, fmt.Errorf("%s", errMsg)
 	}
 
 	// Make gRPC call

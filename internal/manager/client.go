@@ -32,12 +32,13 @@ func FetchContainers(cfg *config.Config) ([]*pb.DevcontainerConfig, error) {
 	listener.Close()
 
 	// Establish SSH tunnel
-	tunnelArg := fmt.Sprintf("%d:localhost:50051", localPort)
 	jumpArg := fmt.Sprintf("%s@%s", usr.Username, cfg.RouterAddress)
 	hostArg := fmt.Sprintf("%s@%s", usr.Username, cfg.HostAddress)
+	routerTunnelArg := fmt.Sprintf("%d:localhost:%d", localPort, localPort)
+	hostTunnelArg := fmt.Sprintf("%d:localhost:50051", localPort)
 
 	var stderr bytes.Buffer
-	cmd := exec.Command("ssh", "-N", "-L", tunnelArg, "-J", jumpArg, hostArg)
+	cmd := exec.Command("ssh", "-L", routerTunnelArg, jumpArg, "ssh", "-N", "-L", hostTunnelArg, hostArg)
 	cmd.Stderr = &stderr
 	if err := cmd.Start(); err != nil {
 		return nil, fmt.Errorf("SSH tunnel failed to start: %w", err)

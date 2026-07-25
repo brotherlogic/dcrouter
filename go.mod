@@ -4,7 +4,7 @@ go 1.26.1
 
 require (
 	github.com/brotherlogic/devcontainer-manager v0.0.0-20260708220619-a8ed6806e2b2
-	google.golang.org/grpc v1.82.0
+	google.golang.org/grpc v1.82.1
 )
 
 require (
